@@ -1,11 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "GkMiYRUqVRo=",
+  "dgSpecHash": "8lZc7i/htSc=",
   "success": true,
   "projectFilePath": "C:\\Users\\rorrl\\Projetos\\Github\\WoMakersCode\\Módulo 9 - QA do Código e Arqutetura\\DesafioQualidadedeCodigoEcommerce\\src\\Ecommerce.API\\Ecommerce.API.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\rorrl\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.12\\microsoft.aspnetcore.openapi.10.0.12.nupkg.sha512",
-    "C:\\Users\\rorrl\\.nuget\\packages\\microsoft.openapi\\2.12.0\\microsoft.openapi.2.12.0.nupkg.sha512"
+    "C:\\Users\\rorrl\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\rorrl\\.nuget\\packages\\microsoft.openapi\\1.6.22\\microsoft.openapi.1.6.22.nupkg.sha512",
+    "C:\\Users\\rorrl\\.nuget\\packages\\swashbuckle.aspnetcore\\7.2.0\\swashbuckle.aspnetcore.7.2.0.nupkg.sha512",
+    "C:\\Users\\rorrl\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\7.2.0\\swashbuckle.aspnetcore.swagger.7.2.0.nupkg.sha512",
+    "C:\\Users\\rorrl\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\7.2.0\\swashbuckle.aspnetcore.swaggergen.7.2.0.nupkg.sha512",
+    "C:\\Users\\rorrl\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\7.2.0\\swashbuckle.aspnetcore.swaggerui.7.2.0.nupkg.sha512"
   ],
   "logs": []
 }

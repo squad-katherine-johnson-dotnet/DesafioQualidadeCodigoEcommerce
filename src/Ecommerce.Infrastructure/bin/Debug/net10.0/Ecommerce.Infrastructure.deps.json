@@ -8,10 +8,22 @@
     ".NETCoreApp,Version=v10.0": {
       "Ecommerce.Infrastructure/1.0.0": {
         "dependencies": {
+          "Ecommerce.Application": "1.0.0",
           "Ecommerce.Domain": "1.0.0"
         },
         "runtime": {
           "Ecommerce.Infrastructure.dll": {}
+        }
+      },
+      "Ecommerce.Application/1.0.0": {
+        "dependencies": {
+          "Ecommerce.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Ecommerce.Application.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Ecommerce.Domain/1.0.0": {
@@ -26,6 +38,11 @@
   },
   "libraries": {
     "Ecommerce.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Ecommerce.Application/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
