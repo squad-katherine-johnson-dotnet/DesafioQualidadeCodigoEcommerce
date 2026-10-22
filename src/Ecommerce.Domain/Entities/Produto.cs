@@ -28,4 +28,26 @@ public class Produto
         Preco = preco;
         Estoque = estoque;
     }
+    public void RegistrarEntradaEstoque(int quantidade)
+    {
+        if (quantidade <= 0)
+            throw new ArgumentOutOfRangeException(nameof(quantidade), "A quantidade de entrada deve ser maior que zero.");
+
+        if (quantidade > int.MaxValue - Estoque)
+            throw new ArgumentOutOfRangeException(nameof(quantidade), "A quantidade ultrapassa o limite permitido.");
+
+        Estoque += quantidade;
+    }
+
+    public void RegistrarSaidaEstoque(int quantidade)
+    {
+        if (quantidade <= 0)
+            throw new ArgumentOutOfRangeException(
+                nameof(quantidade), "A quantidade de saída deve ser maior que zero.");
+
+        if (quantidade > Estoque)
+            throw new InvalidOperationException("Estoque insuficiente para realizar a saída.");
+
+        Estoque -= quantidade;
+    }
 }
