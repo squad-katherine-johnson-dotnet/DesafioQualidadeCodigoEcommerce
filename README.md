@@ -4,13 +4,11 @@ Projeto desenvolvido em squad como parte do desafio de **Qualidade de Código e 
 
 ---
 
-
 ## 🎯 Objetivo do Desafio
 
 Refatorar uma Web API monolítica em .NET que continha graves problemas de arquitetura (como *God Controller*, ausência de camadas, acoplamento direto com banco de dados, falhas em transações e violações do SOLID), transformando-a em uma aplicação limpa, manutenível, testável e bem estruturada.
 
 ---
-
 
 ## 🏗️ Arquitetura e Estrutura do Esqueleto (Etapa 1)
 
@@ -30,59 +28,53 @@ EcommerceRefatorado/
 
 ---
 
-
 ## 👥 Divisão de Responsabilidades e Features (Etapa 2)
 
 | Responsável | Área / Feature | Descrição e Escopo Técnico |
 | --- | --- | --- |
-| **Rosana Lima**    | **Setup Base & Produtos** | Criação da arquitetura em camadas e DTOs, CRUD de Produtos, validações e testes unitários do catálogo. |
-| **Yasmin Bezerra**    | **Estoque** | Consultas, movimentações (entrada/saída), regras de reabastecimento e validação contra quantidades inválidas. |
-| <nobr>**Mariana Brombilla**</nobr>    |  **Pedidos** | Cálculo de total e regras de desconto, validação de itens com estoque e correção da atomicidade/estorno em falhas de pagamento. |
-| **Bianca Fernandes**    |  **Pagamento & Logística** | Desacoplamento de serviços, processamento assíncrono, controle de status (Enum) e lógica de reprocessamento/reenvio. |
+| <nobr>**Rosana Lima**</nobr> | **Setup Base & Produtos** | Criação da arquitetura em camadas e DTOs, CRUD de Produtos, validações e testes unitários do catálogo. |
+| <nobr>**Yasmin Bezerra**</nobr> | **Estoque** | Consultas, movimentações (entrada/saída), regras de reabastecimento e validação contra quantidades inválidas. |
+| <nobr>**Mariana Brombilla**</nobr> | **Pedidos** | Cálculo de total e regras de desconto, validação de itens com estoque e correção da atomicidade/estorno em falhas de pagamento. |
+| <nobr>**Bianca Fernandes**</nobr> | **Pagamento & Logística** | Desacoplamento de serviços, processamento assíncrono, controle de status (Enum) e lógica de reprocessamento/reenvio. |
 
 ---
-
 
 ## 🚀 Como Executar o Projeto
 
 1. **Clonar o repositório:**
-```bash
 
+```bash
 git clone [https://github.com/squad-katherine-johnson-dotnet/DesafioQualidadeCodigoEcommerce.git](https://github.com/squad-katherine-johnson-dotnet/DesafioQualidadeCodigoEcommerce.git)
 cd DesafioQualidadeCodigoEcommerce
 
 ```
 
-
 2. **Compilar a solução:**
+
 ```bash
 
 dotnet build
 
 ```
 
-
 3. **Executar a API:**
+
 ```bash
 
 dotnet run --project src/Ecommerce.API/Ecommerce.API.csproj
 
 ```
 
-
 4. **Acessar o Swagger:**
-```bash
 
 Abra o navegador em `http://localhost:5000/swagger/index.html`.
 
-```
 ---
-
-
 
 ## 🔄 Fluxo de Trabalho e Git da Squad
 
 1. **Atualizar a branch principal antes de iniciar:**
+
 ```bash
 
 git switch main
@@ -90,17 +82,16 @@ git pull origin main
 
 ```
 
-
 2. **Criar a sua branch a partir da `main`:**
-```bash
 
+```bash
 
 git switch -c feature/nome-da-sua-area
 
 ```
 
-
 3. **Enviar as alterações e abrir Pull Request (PR) para a `main`:**
+
 ```bash
 
 git add .
@@ -108,6 +99,3 @@ git commit -m "feat: implementa camada de estoque"
 git push -u origin feature/nome-da-sua-area
 
 ```
-
-
----
