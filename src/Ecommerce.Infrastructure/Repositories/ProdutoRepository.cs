@@ -1,39 +1,53 @@
-using System.Collections.Concurrent;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Interfaces;
+using Ecommerce.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Infrastructure.Repositories;
 
 public class ProdutoRepository : IProdutoRepository
 {
-    private readonly ConcurrentDictionary<int, Produto> _produtos = new();
-    private int _proximoId = 1;
+    private readonly AppDbContext _context;
 
-    public IEnumerable<Produto> ObterTodos() => _produtos.Values;
+    public ProdutoRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public IEnumerable<Produto> ObterTodos()
+    {
+        return _context.Produtos.AsNoTracking().ToList();
+    }
 
     public Produto? ObterPorId(int id)
     {
-        _produtos.TryGetValue(id, out var produto);
-        return produto;
+        return _context.Produtos.Find(id);
     }
 
     public Produto Adicionar(Produto produto)
     {
-        var id = _proximoId++;
-        var novoProduto = new Produto(id, produto.Nome, produto.Preco, produto.Estoque);
-        _produtos[id] = novoProduto;
-        return novoProduto;
+        _context.Produtos.Add(produto);
+        _context.SaveChanges();
+        return produto;
     }
 
     public bool Atualizar(Produto produto)
     {
-        if (!_produtos.ContainsKey(produto.Id)) return false;
-        _produtos[produto.Id] = produto;
+        var existente = _context.Produtos.Find(produto.Id);
+        if (existente == null) return false;
+
+        _context.Entry(existente).CurrentValues.SetValues(produto);
+        _context.SaveChanges();
         return true;
     }
 
     public bool Remover(int id)
     {
-        return _produtos.TryRemove(id, out _);
+        var produto = _context.Produtos.Find(id);
+        if (produto == null) return false;
+
+        _context.Produtos.Remove(produto);
+        _context.SaveChanges();
+        return true;
     }
 }

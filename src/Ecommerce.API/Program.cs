@@ -1,28 +1,34 @@
 using Ecommerce.Application.Interfaces;
 using Ecommerce.Application.Services;
 using Ecommerce.Domain.Interfaces;
+using Ecommerce.Infrastructure.Context;
 using Ecommerce.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
+
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IProdutoRepository, ProdutoRepository>();
-
-builder.Services.AddScoped<IProdutoService, ProdutoService>();
-
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.EnsureCreated();
+}
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(configuracaoSwagger =>
-    {
-        configuracaoSwagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Ecommerce API v1");
-    });
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
