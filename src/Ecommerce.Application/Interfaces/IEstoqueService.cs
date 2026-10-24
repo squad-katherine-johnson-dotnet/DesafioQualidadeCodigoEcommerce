@@ -9,4 +9,5 @@ public interface IEstoqueService
     ProdutoResponseDto? RegistrarEntrada(int produtoId, int quantidade);
     ProdutoResponseDto? RegistrarSaida(int produtoId, int quantidade);
     IEnumerable<ProdutoResponseDto> ObterAbaixoDoMinimo(int quantidadeMinima);
+    bool RegistrarSaidasEmLote(IEnumerable<(int ProdutoId, int Quantidade)> itens);
 }

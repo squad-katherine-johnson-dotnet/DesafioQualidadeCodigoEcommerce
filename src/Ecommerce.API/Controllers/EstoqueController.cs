@@ -1,4 +1,3 @@
-
 using Ecommerce.Application.DTOs;
 using Ecommerce.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -29,19 +28,17 @@ public class EstoqueController : ControllerBase
         var produto = _estoqueService.ObterPorId(id);
 
         if (produto == null)
-            return NotFound(new
-            {
-                mensagem = $"Produto com ID {id} não foi encontrado."
-            });
+            return NotFound(new { mensagem = $"Produto com ID {id} não foi encontrado." });
 
         return Ok(produto);
     }
 
     [HttpGet("abaixo-do-minimo")]
-    public IActionResult ObterAbaixoDoMinimo([FromQuery] int quantidadeMinima = 5)
+    public IActionResult ObterAbaixoDoMinimo(
+    [FromQuery] int quantidadeMinima = 5)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+        if (quantidadeMinima < 0)
+            return BadRequest(new { mensagem = "A quantidade mínima não pode ser negativa." });
 
         var produtos = _estoqueService.ObterAbaixoDoMinimo(
             quantidadeMinima);
@@ -82,5 +79,25 @@ public class EstoqueController : ControllerBase
         {
             return Conflict(new { mensagem = ex.Message });
         }
+    }
+
+    [HttpPost("saidas-em-lote")]
+    public IActionResult RegistrarSaidasEmLote([FromBody] SaidasEstoqueLoteDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var itens = dto.Itens
+            .Select(item => (ProdutoId: item.ProdutoId, Quantidade: item.Quantidade))
+            .ToList();
+
+        var sucesso = _estoqueService.RegistrarSaidasEmLote(itens);
+
+        if (!sucesso)
+        {
+            return Conflict(new { mensagem = "Não foi possível realizar todas as baixas. Verifique os produtos e os estoques disponíveis." });
+        }
+
+        return Ok(new { mensagem = "Todas as baixas de estoque foram realizadas com sucesso." });
     }
 }

@@ -50,4 +50,68 @@ public class ProdutoRepository : IProdutoRepository
         _context.SaveChanges();
         return true;
     }
+    public int BaixarEstoqueSeDisponivel(int produtoId, int quantidade)
+    {
+        if (quantidade <= 0)
+            return 0;
+
+        var linhasAlteradas = _context.Produtos
+            .Where(p => p.Id == produtoId && p.Estoque >= quantidade)
+            .ExecuteUpdate(setters => setters
+                .SetProperty(p => p.Estoque, p => p.Estoque - quantidade));
+
+        if (linhasAlteradas > 0)
+        {
+            var produtoRastreado = _context.ChangeTracker
+                .Entries<Produto>()
+                .FirstOrDefault(e => e.Entity.Id == produtoId);
+
+            produtoRastreado?.Reload();
+        }
+
+        return linhasAlteradas;
+    }
+
+    public bool BaixarEstoqueEmLote(IEnumerable<(int ProdutoId, int Quantidade)> itens)
+    {
+        var lista = itens.ToList();
+
+        if (lista.Count == 0)
+            return true;
+
+        if (lista.Any(item => item.ProdutoId <= 0 || item.Quantidade <= 0))
+        {
+            return false;
+        }
+
+        using var transacao = _context.Database.BeginTransaction();
+
+        foreach (var item in lista)
+        {
+            var linhasAlteradas = _context.Produtos
+                .Where(p =>
+                    p.Id == item.ProdutoId &&
+                    p.Estoque >= item.Quantidade)
+                .ExecuteUpdate(setters => setters
+                    .SetProperty(p => p.Estoque, p => p.Estoque - item.Quantidade));
+
+            if (linhasAlteradas == 0)
+            {
+                transacao.Rollback();
+                return false;
+            }
+        }
+
+        transacao.Commit();
+
+        foreach (var item in lista)
+        {
+            var produtoRastreado = _context.ChangeTracker
+                .Entries<Produto>()
+                .FirstOrDefault(e => e.Entity.Id == item.ProdutoId);
+
+            produtoRastreado?.Reload();
+        }
+        return true;
+    }
 }
