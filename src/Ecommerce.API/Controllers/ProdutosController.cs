@@ -17,7 +17,7 @@ public class ProdutosController : ControllerBase {
     [HttpGet]
     public ActionResult<RespostaPadraoDto<IEnumerable<ProdutoResponseDto>>> ListarProdutos() {
 
-        var produtos = _produtoService.ObterTodos();
+        var produtos = _produtoService.ListarProdutos();
 
         return Ok(new RespostaPadraoDto<IEnumerable<ProdutoResponseDto>> {
             Sucesso = true,
@@ -29,7 +29,7 @@ public class ProdutosController : ControllerBase {
     [HttpGet("{id:int}")]
     public ActionResult<RespostaPadraoDto<ProdutoResponseDto>> ObterProdutoPorId(int id) {
 
-        var produto = _produtoService.ObterPorId(id);
+        var produto = _produtoService.ConsultarProdutoPorId(id);
 
         if (produto == null) {
 
@@ -50,7 +50,7 @@ public class ProdutosController : ControllerBase {
     [HttpPost]
     public ActionResult<RespostaPadraoDto<ProdutoResponseDto>> CadastrarProduto([FromBody] CriarProdutoDto dto) {
 
-        var produtoCriado = _produtoService.Criar(dto);
+        var produtoCriado = _produtoService.CriarProduto(dto);
 
         var resposta = new RespostaPadraoDto<ProdutoResponseDto> {
             Sucesso = true,
@@ -64,7 +64,7 @@ public class ProdutosController : ControllerBase {
     [HttpPut("{id:int}")]
     public ActionResult<RespostaPadraoDto<ProdutoResponseDto>> AtualizarProduto(int id, [FromBody] AtualizarProdutoDto dto) {
 
-        var atualizado = _produtoService.Atualizar(id, dto);
+        var atualizado = _produtoService.AtualizarProduto(id, dto);
 
         if (!atualizado) {
 
@@ -75,7 +75,7 @@ public class ProdutosController : ControllerBase {
             });
         }
 
-        var produtoAtualizado = _produtoService.ObterPorId(id);
+        var produtoAtualizado = _produtoService.ConsultarProdutoPorId(id);
 
         return Ok(new RespostaPadraoDto<ProdutoResponseDto> {
             Sucesso = true,
@@ -87,7 +87,7 @@ public class ProdutosController : ControllerBase {
     [HttpDelete("{id:int}")]
     public ActionResult<RespostaPadraoDto<object>> RemoverProduto(int id) {
 
-        var removido = _produtoService.Remover(id);
+        var removido = _produtoService.RemoverProduto(id);
 
         if (!removido) {
 

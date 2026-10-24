@@ -21,19 +21,19 @@ public class PedidoService : IPedidoService
         _estoqueService = estoqueService;
     }
 
-    public IEnumerable<PedidoResponseDto> ObterTodos()
+    public IEnumerable<PedidoResponseDto> ListarPedidos()
     {
         return _pedidoRepository.ObterTodos().Select(Mapear);
     }
 
-    public PedidoResponseDto? ObterPorId(int id)
+    public PedidoResponseDto? ConsultarPedidoPorId(int id)
     {
         var pedido = _pedidoRepository.ObterPorId(id);
 
         return pedido is null ? null : Mapear(pedido);
     }
 
-    public PedidoResponseDto Criar(CriarPedidoDto dto)
+    public PedidoResponseDto CriarPedido(CriarPedidoDto dto)
     {
         var itensPedido = new List<ItemPedido>();
 
@@ -58,7 +58,7 @@ public class PedidoService : IPedidoService
             .Select(item => (item.ProdutoId, item.Quantidade))
             .ToList();
 
-        if (!_estoqueService.RegistrarSaidasEmLote(saidas))
+        if (!_estoqueService.RegistrarSaidasDeEstoqueEmLote(saidas))
             throw new InvalidOperationException(
                 "Não foi possível realizar a baixa do estoque.");
 

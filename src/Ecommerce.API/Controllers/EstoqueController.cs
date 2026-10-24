@@ -17,7 +17,7 @@ public class EstoqueController : ControllerBase {
     [HttpGet]
     public ActionResult<RespostaPadraoDto<IEnumerable<ProdutoResponseDto>>> ConsultarEstoque() {
 
-        var produtos = _estoqueService.ObterTodos();
+        var produtos = _estoqueService.ConsultarEstoque();
 
         return Ok(new RespostaPadraoDto<IEnumerable<ProdutoResponseDto>> {
             Sucesso = true,
@@ -29,7 +29,7 @@ public class EstoqueController : ControllerBase {
     [HttpGet("{id:int}")]
     public ActionResult<RespostaPadraoDto<ProdutoResponseDto>> ConsultarEstoquePorProdutoId(int id) {
 
-        var produto = _estoqueService.ObterPorId(id);
+        var produto = _estoqueService.ConsultarEstoquePorProdutoId(id);
 
         if (produto == null) {
 
@@ -60,7 +60,7 @@ public class EstoqueController : ControllerBase {
             });
         }
 
-        var produtos = _estoqueService.ObterAbaixoDoMinimo(quantidadeMinima);
+        var produtos = _estoqueService.ListarProdutosAbaixoDoEstoqueMinimo(quantidadeMinima);
 
         return Ok(new RespostaPadraoDto<IEnumerable<ProdutoResponseDto>> {
             Sucesso = true,
@@ -73,7 +73,7 @@ public class EstoqueController : ControllerBase {
     public ActionResult<RespostaPadraoDto<ProdutoResponseDto>> RegistrarEntradaDeEstoque(
         int id, [FromBody] MovimentacaoEstoqueDto dto) {
 
-        var produto = _estoqueService.RegistrarEntrada(id, dto.Quantidade);
+        var produto = _estoqueService.RegistrarEntradaDeEstoque(id, dto.Quantidade);
 
         if (produto == null) {
 
@@ -97,7 +97,7 @@ public class EstoqueController : ControllerBase {
 
         try {
 
-            var produto = _estoqueService.RegistrarSaida(id, dto.Quantidade);
+            var produto = _estoqueService.RegistrarSaidaDeEstoque(id, dto.Quantidade);
 
             if (produto == null) {
 
@@ -133,7 +133,7 @@ public class EstoqueController : ControllerBase {
             .Select(item => (ProdutoId: item.ProdutoId, Quantidade: item.Quantidade))
             .ToList();
 
-        var sucesso = _estoqueService.RegistrarSaidasEmLote(itens);
+        var sucesso = _estoqueService.RegistrarSaidasDeEstoqueEmLote(itens);
 
         if (!sucesso) {
 

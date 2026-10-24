@@ -17,7 +17,7 @@ public class PedidosController : ControllerBase {
     [HttpGet]
     public ActionResult<RespostaPadraoDto<IEnumerable<PedidoResponseDto>>> ListarPedidos() {
 
-        var pedidos = _pedidoService.ObterTodos();
+        var pedidos = _pedidoService.ListarPedidos();
 
         return Ok(new RespostaPadraoDto<IEnumerable<PedidoResponseDto>> {
             Sucesso = true,
@@ -29,7 +29,7 @@ public class PedidosController : ControllerBase {
     [HttpGet("{id:int}")]
     public ActionResult<RespostaPadraoDto<PedidoResponseDto>> ObterPedidoPorId(int id) {
 
-        var pedido = _pedidoService.ObterPorId(id);
+        var pedido = _pedidoService.ConsultarPedidoPorId(id);
 
         if (pedido is null) {
 
@@ -52,7 +52,7 @@ public class PedidosController : ControllerBase {
 
         try {
 
-            var pedido = _pedidoService.Criar(dto);
+            var pedido = _pedidoService.CriarPedido(dto);
 
             var resposta = new RespostaPadraoDto<PedidoResponseDto> {
                 Sucesso = true,

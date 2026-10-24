@@ -2,11 +2,10 @@ using Ecommerce.Application.DTOs;
 
 namespace Ecommerce.Application.Interfaces;
 
-public interface IProdutoService
-{
-    IEnumerable<ProdutoResponseDto> ObterTodos();
-    ProdutoResponseDto? ObterPorId(int id);
-    ProdutoResponseDto Criar(CriarProdutoDto dto);
-    bool Atualizar(int id, AtualizarProdutoDto dto);
-    bool Remover(int id);
+public interface IProdutoService {
+    IEnumerable<ProdutoResponseDto> ListarProdutos();
+    ProdutoResponseDto? ConsultarProdutoPorId(int id);
+    ProdutoResponseDto CriarProduto(CriarProdutoDto dto);
+    bool AtualizarProduto(int id, AtualizarProdutoDto dto);
+    bool RemoverProduto(int id);
 }

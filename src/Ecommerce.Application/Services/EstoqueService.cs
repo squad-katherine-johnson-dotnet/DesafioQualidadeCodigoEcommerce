@@ -13,13 +13,13 @@ public class EstoqueService : IEstoqueService
         _repository = repository;
     }
 
-    public IEnumerable<ProdutoResponseDto> ObterTodos()
+    public IEnumerable<ProdutoResponseDto> ConsultarEstoque()
     {
         return _repository.ObterTodos()
             .Select(produto => MapearProduto(produto));
     }
 
-    public ProdutoResponseDto? ObterPorId(int produtoId)
+    public ProdutoResponseDto? ConsultarEstoquePorProdutoId(int produtoId)
     {
         var produto = _repository.ObterPorId(produtoId);
 
@@ -29,7 +29,7 @@ public class EstoqueService : IEstoqueService
         return MapearProduto(produto);
     }
 
-    public ProdutoResponseDto? RegistrarEntrada(int produtoId, int quantidade)
+    public ProdutoResponseDto? RegistrarEntradaDeEstoque(int produtoId, int quantidade)
     {
         if (quantidade <= 0)
             throw new ArgumentOutOfRangeException(
@@ -45,12 +45,13 @@ public class EstoqueService : IEstoqueService
         var atualizado = _repository.Atualizar(produto);
 
         if (!atualizado)
-            return null;
+            throw new InvalidOperationException(
+                "Não foi possível atualizar o estoque do produto.");
 
         return MapearProduto(produto);
     }
 
-    public ProdutoResponseDto? RegistrarSaida(int produtoId, int quantidade)
+    public ProdutoResponseDto? RegistrarSaidaDeEstoque(int produtoId, int quantidade)
     {
         if (quantidade <= 0)
             throw new ArgumentOutOfRangeException(
@@ -64,7 +65,8 @@ public class EstoqueService : IEstoqueService
         var linhasAlteradas = _repository.BaixarEstoqueSeDisponivel(produtoId, quantidade);
 
         if (linhasAlteradas == 0)
-            throw new InvalidOperationException("Estoque insuficiente para realizar a saída.");
+            throw new InvalidOperationException(
+                "Não foi possível realizar a saída. Verifique se o estoque é suficiente.");
 
         var atualizado = _repository.ObterPorId(produtoId);
 
@@ -74,7 +76,7 @@ public class EstoqueService : IEstoqueService
         return MapearProduto(atualizado);
     }
 
-    public IEnumerable<ProdutoResponseDto> ObterAbaixoDoMinimo(int quantidadeMinima)
+    public IEnumerable<ProdutoResponseDto> ListarProdutosAbaixoDoEstoqueMinimo(int quantidadeMinima)
     {
         if (quantidadeMinima < 0)
             throw new ArgumentOutOfRangeException(nameof(quantidadeMinima), "O estoque mínimo não pode ser negativo.");
@@ -94,7 +96,7 @@ public class EstoqueService : IEstoqueService
         };
     }
 
-    public bool RegistrarSaidasEmLote(
+    public bool RegistrarSaidasDeEstoqueEmLote(
         IEnumerable<(int ProdutoId, int Quantidade)> itens)
     {
         return _repository.BaixarEstoqueEmLote(itens);

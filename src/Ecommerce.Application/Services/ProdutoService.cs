@@ -14,7 +14,7 @@ public class ProdutoService : IProdutoService
         _repository = repository;
     }
 
-    public IEnumerable<ProdutoResponseDto> ObterTodos()
+    public IEnumerable<ProdutoResponseDto> ListarProdutos()
     {
         return _repository.ObterTodos().Select(produto => new ProdutoResponseDto
         {
@@ -25,7 +25,7 @@ public class ProdutoService : IProdutoService
         });
     }
 
-    public ProdutoResponseDto? ObterPorId(int id)
+    public ProdutoResponseDto? ConsultarProdutoPorId(int id)
     {
         var produto = _repository.ObterPorId(id);
         if (produto == null) return null;
@@ -39,7 +39,7 @@ public class ProdutoService : IProdutoService
         };
     }
 
-    public ProdutoResponseDto Criar(CriarProdutoDto dto)
+    public ProdutoResponseDto CriarProduto(CriarProdutoDto dto)
     {
         var novoProduto = new Produto(0, dto.Nome, dto.Preco, dto.Estoque);
         var produtoCriado = _repository.Adicionar(novoProduto);
@@ -53,7 +53,7 @@ public class ProdutoService : IProdutoService
         };
     }
 
-    public bool Atualizar(int id, AtualizarProdutoDto dto)
+    public bool AtualizarProduto(int id, AtualizarProdutoDto dto)
     {
         var produtoExistente = _repository.ObterPorId(id);
         if (produtoExistente == null) return false;
@@ -62,7 +62,7 @@ public class ProdutoService : IProdutoService
         return _repository.Atualizar(produtoExistente);
     }
 
-    public bool Remover(int id)
+    public bool RemoverProduto(int id)
     {
         return _repository.Remover(id);
     }
