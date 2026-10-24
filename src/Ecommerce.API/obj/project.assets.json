@@ -2866,23 +2866,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\rorrl\\.nuget\\packages\\": {},
+    "C:\\Users\\Marques\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\rorrl\\Projetos\\Github\\WoMakersCode\\Módulo 9 - QA do Código e Arqutetura\\DesafioQualidadedeCodigoEcommerce\\src\\Ecommerce.API\\Ecommerce.API.csproj",
+      "projectUniqueName": "C:\\Users\\Marques\\Desktop\\DesafioQualidadeCodigoEcommerce\\src\\Ecommerce.API\\Ecommerce.API.csproj",
       "projectName": "Ecommerce.API",
-      "projectPath": "C:\\Users\\rorrl\\Projetos\\Github\\WoMakersCode\\Módulo 9 - QA do Código e Arqutetura\\DesafioQualidadedeCodigoEcommerce\\src\\Ecommerce.API\\Ecommerce.API.csproj",
-      "packagesPath": "C:\\Users\\rorrl\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\rorrl\\Projetos\\Github\\WoMakersCode\\Módulo 9 - QA do Código e Arqutetura\\DesafioQualidadedeCodigoEcommerce\\src\\Ecommerce.API\\obj\\",
+      "projectPath": "C:\\Users\\Marques\\Desktop\\DesafioQualidadeCodigoEcommerce\\src\\Ecommerce.API\\Ecommerce.API.csproj",
+      "packagesPath": "C:\\Users\\Marques\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Marques\\Desktop\\DesafioQualidadeCodigoEcommerce\\src\\Ecommerce.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\rorrl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Marques\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -2891,7 +2891,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2899,14 +2898,14 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\Users\\rorrl\\Projetos\\Github\\WoMakersCode\\Módulo 9 - QA do Código e Arqutetura\\DesafioQualidadedeCodigoEcommerce\\src\\Ecommerce.Application\\Ecommerce.Application.csproj": {
-              "projectPath": "C:\\Users\\rorrl\\Projetos\\Github\\WoMakersCode\\Módulo 9 - QA do Código e Arqutetura\\DesafioQualidadedeCodigoEcommerce\\src\\Ecommerce.Application\\Ecommerce.Application.csproj"
+            "C:\\Users\\Marques\\Desktop\\DesafioQualidadeCodigoEcommerce\\src\\Ecommerce.Application\\Ecommerce.Application.csproj": {
+              "projectPath": "C:\\Users\\Marques\\Desktop\\DesafioQualidadeCodigoEcommerce\\src\\Ecommerce.Application\\Ecommerce.Application.csproj"
             },
-            "C:\\Users\\rorrl\\Projetos\\Github\\WoMakersCode\\Módulo 9 - QA do Código e Arqutetura\\DesafioQualidadedeCodigoEcommerce\\src\\Ecommerce.Domain\\Ecommerce.Domain.csproj": {
-              "projectPath": "C:\\Users\\rorrl\\Projetos\\Github\\WoMakersCode\\Módulo 9 - QA do Código e Arqutetura\\DesafioQualidadedeCodigoEcommerce\\src\\Ecommerce.Domain\\Ecommerce.Domain.csproj"
+            "C:\\Users\\Marques\\Desktop\\DesafioQualidadeCodigoEcommerce\\src\\Ecommerce.Domain\\Ecommerce.Domain.csproj": {
+              "projectPath": "C:\\Users\\Marques\\Desktop\\DesafioQualidadeCodigoEcommerce\\src\\Ecommerce.Domain\\Ecommerce.Domain.csproj"
             },
-            "C:\\Users\\rorrl\\Projetos\\Github\\WoMakersCode\\Módulo 9 - QA do Código e Arqutetura\\DesafioQualidadedeCodigoEcommerce\\src\\Ecommerce.Infrastructure\\Ecommerce.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\rorrl\\Projetos\\Github\\WoMakersCode\\Módulo 9 - QA do Código e Arqutetura\\DesafioQualidadedeCodigoEcommerce\\src\\Ecommerce.Infrastructure\\Ecommerce.Infrastructure.csproj"
+            "C:\\Users\\Marques\\Desktop\\DesafioQualidadeCodigoEcommerce\\src\\Ecommerce.Infrastructure\\Ecommerce.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\Marques\\Desktop\\DesafioQualidadeCodigoEcommerce\\src\\Ecommerce.Infrastructure\\Ecommerce.Infrastructure.csproj"
             }
           }
         }
@@ -2921,7 +2920,7 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.400"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "net10.0": {
@@ -2958,7 +2957,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.402/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
