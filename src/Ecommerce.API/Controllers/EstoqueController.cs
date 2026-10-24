@@ -127,7 +127,7 @@ public class EstoqueController : ControllerBase {
 
     [HttpPost("saidas-em-lote")]
     public ActionResult<RespostaPadraoDto<object>> RegistrarSaidasDeEstoqueEmLote(
-        [FromBody] SaidasEstoqueLoteDto dto) {
+        [FromBody] RegistrarSaidasEstoqueLoteDto dto) {
 
         var itens = dto.Itens
             .Select(item => (ProdutoId: item.ProdutoId, Quantidade: item.Quantidade))
