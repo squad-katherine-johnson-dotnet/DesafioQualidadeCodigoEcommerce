@@ -9,4 +9,7 @@ public interface IProdutoRepository
     Produto Adicionar(Produto produto);
     bool Atualizar(Produto produto);
     bool Remover(int id);
+    int BaixarEstoqueSeDisponivel(int produtoId, int quantidade);
+    bool BaixarEstoqueEmLote(
+        IEnumerable<(int ProdutoId, int Quantidade)> itens);
 }

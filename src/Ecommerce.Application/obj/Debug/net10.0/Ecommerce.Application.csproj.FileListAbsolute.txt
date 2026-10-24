@@ -14,3 +14,19 @@ C:\Users\rorrl\Projetos\Github\WoMakersCode\Módulo 9 - QA do Código e Arqutetu
 C:\Users\rorrl\Projetos\Github\WoMakersCode\Módulo 9 - QA do Código e Arqutetura\DesafioQualidadedeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\refint\Ecommerce.Application.dll
 C:\Users\rorrl\Projetos\Github\WoMakersCode\Módulo 9 - QA do Código e Arqutetura\DesafioQualidadedeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\Ecommerce.Application.pdb
 C:\Users\rorrl\Projetos\Github\WoMakersCode\Módulo 9 - QA do Código e Arqutetura\DesafioQualidadedeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\ref\Ecommerce.Application.dll
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\bin\Debug\net10.0\Ecommerce.Application.deps.json
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\bin\Debug\net10.0\Ecommerce.Application.dll
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\bin\Debug\net10.0\Ecommerce.Application.pdb
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\bin\Debug\net10.0\Ecommerce.Domain.dll
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\bin\Debug\net10.0\Ecommerce.Domain.pdb
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\Ecommerce.Application.csproj.AssemblyReference.cache
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\Ecommerce.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\Ecommerce.Application.AssemblyInfoInputs.cache
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\Ecommerce.Application.AssemblyInfo.cs
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\Ecommerce.Application.csproj.CoreCompileInputs.cache
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\Ecommerce.Application.sourcelink.json
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\Ecommerc.C5F54E74.Up2Date
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\Ecommerce.Application.dll
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\refint\Ecommerce.Application.dll
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\Ecommerce.Application.pdb
+C:\Users\Marques\Desktop\DesafioQualidadeCodigoEcommerce\src\Ecommerce.Application\obj\Debug\net10.0\ref\Ecommerce.Application.dll
