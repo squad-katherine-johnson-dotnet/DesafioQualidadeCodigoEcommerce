@@ -43,7 +43,7 @@ public class ProdutoService : IProdutoService {
 
         if (produtoExistente == null) return false;
 
-        produtoExistente.AtualizarDados(dto.Nome, dto.Preco, dto.Estoque);
+        produtoExistente.AtualizarDados(dto.Nome, dto.Preco, produtoExistente.Estoque);
 
         return _repository.AtualizarProduto(produtoExistente);
     }

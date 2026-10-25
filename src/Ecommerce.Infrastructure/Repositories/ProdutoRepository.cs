@@ -30,25 +30,17 @@ public class ProdutoRepository : IProdutoRepository {
     }
 
     public bool AtualizarProduto(Produto produto) {
+        ArgumentNullException.ThrowIfNull(produto);
 
-        var existente = _context.Produtos.Find(produto.Id);
+        var linhasAlteradas = _context.Produtos
+            .Where(p => p.Id == produto.Id)
+            .ExecuteUpdate(setters => setters
+                .SetProperty(p => p.Nome, produto.Nome)
+                .SetProperty(p => p.Preco, produto.Preco));
 
-        if (existente == null) return false;
-
-        var valoresOriginais = _context.Entry(existente)
-            .CurrentValues.Clone();
-
-        try {
-            _context.Entry(existente).CurrentValues.SetValues(produto);
-            _context.SaveChanges();
-
-            return true;
-        }
-        catch {
-            _context.Entry(existente).CurrentValues.SetValues(valoresOriginais);
-            throw;
-        }
+        return linhasAlteradas > 0;
     }
+
 
     public bool RemoverProduto(int id) {
 
@@ -59,6 +51,7 @@ public class ProdutoRepository : IProdutoRepository {
         _context.SaveChanges();
         return true;
     }
+
     public int BaixarEstoqueSeDisponivel(int produtoId, int quantidade) {
 
         if (quantidade <= 0) return 0;
@@ -133,4 +126,29 @@ public class ProdutoRepository : IProdutoRepository {
             throw;
         }
     }
+
+    public int RegistrarEntradaEstoque(int produtoId, int quantidade) {
+        if (quantidade <= 0)
+            return 0;
+
+        var linhasAlteradas = _context.Produtos
+            .Where(p =>
+                p.Id == produtoId &&
+                p.Estoque <= int.MaxValue - quantidade)
+            .ExecuteUpdate(setters => setters
+                .SetProperty(
+                    p => p.Estoque,
+                    p => p.Estoque + quantidade));
+
+        if (linhasAlteradas > 0) {
+            var produtoRastreado = _context.ChangeTracker
+                .Entries<Produto>()
+                .FirstOrDefault(e => e.Entity.Id == produtoId);
+
+            produtoRastreado?.Reload();
+        }
+
+        return linhasAlteradas;
+    }
+
 }

@@ -26,25 +26,29 @@ public class EstoqueService : IEstoqueService {
         return MapearProduto(produto);
     }
 
+
     public ProdutoResponseDto? RegistrarEntradaDeEstoque(int produtoId, int quantidade) {
 
-        if (quantidade <= 0)
-            throw new ArgumentOutOfRangeException(
-                nameof(quantidade), "A quantidade deve ser maior que zero.");
+        if (quantidade <= 0) throw new ArgumentOutOfRangeException(
+                nameof(quantidade), "A quantidade de entrada deve ser maior que zero.");
 
         var produto = _repository.ObterProdutoPorId(produtoId);
 
         if (produto == null) return null;
 
-        produto.RegistrarEntradaEstoque(quantidade);
+        var linhasAlteradas = _repository.RegistrarEntradaEstoque(produtoId, quantidade);
 
-        var atualizado = _repository.AtualizarProduto(produto);
+        if (linhasAlteradas == 0) throw new InvalidOperationException(
+                "Não foi possível registrar a entrada. Verifique se o estoque atingiu o limite permitido.");
 
-        if (!atualizado)
-            throw new InvalidOperationException("Não foi possível atualizar o estoque do produto.");
+        var atualizado = _repository.ObterProdutoPorId(produtoId);
 
-        return MapearProduto(produto);
+        if (atualizado == null) throw new InvalidOperationException(
+                "O estoque foi atualizado, mas não foi possível recuperar o produto.");
+
+        return MapearProduto(atualizado);
     }
+
 
     public ProdutoResponseDto? RegistrarSaidaDeEstoque(int produtoId, int quantidade) {
 

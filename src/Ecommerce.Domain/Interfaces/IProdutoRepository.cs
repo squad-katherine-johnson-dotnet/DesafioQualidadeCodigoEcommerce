@@ -10,4 +10,5 @@ public interface IProdutoRepository {
     bool RemoverProduto(int id);
     int BaixarEstoqueSeDisponivel(int produtoId, int quantidade);
     bool BaixarEstoqueEmLote(IEnumerable<(int ProdutoId, int Quantidade)> itens);
+    int RegistrarEntradaEstoque(int produtoId, int quantidade);
 }

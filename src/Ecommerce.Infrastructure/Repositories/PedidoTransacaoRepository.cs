@@ -33,12 +33,11 @@ public class PedidoTransacaoRepository : IPedidoTransacaoRepository {
                 Quantidade: grupo.Sum(item => item.Quantidade)))
             .ToList();
 
+
         using var transacao = _context.Database.BeginTransaction();
 
         try {
-
             foreach (var item in lista) {
-
                 var linhasAlteradas = _context.Produtos
                     .Where(p =>
                         p.Id == item.ProdutoId &&
@@ -58,20 +57,11 @@ public class PedidoTransacaoRepository : IPedidoTransacaoRepository {
             _context.SaveChanges();
 
             transacao.Commit();
-
-            foreach (var item in lista) {
-                var produtoRastreado = _context.ChangeTracker
-                    .Entries<Produto>()
-                    .FirstOrDefault(e => e.Entity.Id == item.ProdutoId);
-
-                produtoRastreado?.Reload();
-            }
-
-            return pedido;
         }
         catch {
             transacao.Rollback();
             throw;
         }
+        return pedido;
     }
 }
