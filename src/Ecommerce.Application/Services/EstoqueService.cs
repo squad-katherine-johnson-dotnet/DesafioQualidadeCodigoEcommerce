@@ -13,13 +13,13 @@ public class EstoqueService : IEstoqueService {
 
     public IEnumerable<ProdutoResponseDto> ConsultarEstoque() {
 
-        return _repository.ObterTodos()
+        return _repository.ListarProdutos()
             .Select(produto => MapearProduto(produto));
     }
 
     public ProdutoResponseDto? ConsultarEstoquePorProdutoId(int produtoId) {
 
-        var produto = _repository.ObterPorId(produtoId);
+        var produto = _repository.ObterProdutoPorId(produtoId);
 
         if (produto == null) return null;
 
@@ -32,13 +32,13 @@ public class EstoqueService : IEstoqueService {
             throw new ArgumentOutOfRangeException(
                 nameof(quantidade), "A quantidade deve ser maior que zero.");
 
-        var produto = _repository.ObterPorId(produtoId);
+        var produto = _repository.ObterProdutoPorId(produtoId);
 
         if (produto == null) return null;
 
         produto.RegistrarEntradaEstoque(quantidade);
 
-        var atualizado = _repository.Atualizar(produto);
+        var atualizado = _repository.AtualizarProduto(produto);
 
         if (!atualizado)
             throw new InvalidOperationException("Não foi possível atualizar o estoque do produto.");
@@ -51,7 +51,7 @@ public class EstoqueService : IEstoqueService {
         if (quantidade <= 0) throw new ArgumentOutOfRangeException(
                 nameof(quantidade), "A quantidade deve ser maior que zero.");
 
-        var produto = _repository.ObterPorId(produtoId);
+        var produto = _repository.ObterProdutoPorId(produtoId);
 
         if (produto == null) return null;
 
@@ -60,7 +60,7 @@ public class EstoqueService : IEstoqueService {
         if (linhasAlteradas == 0)
             throw new InvalidOperationException("Não foi possível realizar a saída. Verifique se o estoque é suficiente.");
 
-        var atualizado = _repository.ObterPorId(produtoId);
+        var atualizado = _repository.ObterProdutoPorId(produtoId);
 
         if (atualizado == null)
             throw new InvalidOperationException("O estoque foi atualizado, mas não foi possível recuperar o produto.");
@@ -74,7 +74,7 @@ public class EstoqueService : IEstoqueService {
             throw new ArgumentOutOfRangeException(
                 nameof(quantidadeMinima), "O estoque mínimo não pode ser negativo.");
 
-        return _repository.ObterTodos()
+        return _repository.ListarProdutos()
             .Where(produto => produto.Estoque < quantidadeMinima)
             .Select(produto => MapearProduto(produto));
     }

@@ -16,6 +16,9 @@ public class PedidoTransacaoRepository : IPedidoTransacaoRepository {
     public Pedido? AdicionarComBaixaDeEstoque(Pedido pedido, IEnumerable<(
         int ProdutoId, int Quantidade)> itens) {
 
+        ArgumentNullException.ThrowIfNull(pedido);
+        ArgumentNullException.ThrowIfNull(itens);
+
         var itensRecebidos = itens.ToList();
 
         if (itensRecebidos.Count == 0 ||

@@ -22,12 +22,12 @@ public class PedidoService : IPedidoService {
 
     public IEnumerable<PedidoResponseDto> ListarPedidos() {
 
-        return _pedidoRepository.ObterTodos().Select(Mapear);
+        return _pedidoRepository.ListarPedidos().Select(Mapear);
     }
 
     public PedidoResponseDto? ConsultarPedidoPorId(int id) {
 
-        var pedido = _pedidoRepository.ObterPorId(id);
+        var pedido = _pedidoRepository.ObterPedidoPorId(id);
 
         return pedido is null ? null : Mapear(pedido);
     }
@@ -37,7 +37,7 @@ public class PedidoService : IPedidoService {
         var itensPedido = new List<ItemPedido>();
 
         foreach (var itemDto in dto.Itens) {
-            var produto = _produtoRepository.ObterPorId(itemDto.ProdutoId);
+            var produto = _produtoRepository.ObterProdutoPorId(itemDto.ProdutoId);
 
             if (produto is null)
                 throw new KeyNotFoundException($"Produto com ID {itemDto.ProdutoId} não foi encontrado.");

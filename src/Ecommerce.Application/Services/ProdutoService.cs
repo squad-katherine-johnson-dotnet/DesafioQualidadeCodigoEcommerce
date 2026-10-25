@@ -15,13 +15,13 @@ public class ProdutoService : IProdutoService {
 
     public IEnumerable<ProdutoResponseDto> ListarProdutos() {
 
-        return _repository.ObterTodos()
+        return _repository.ListarProdutos()
             .Select(MapearProduto);
     }
 
     public ProdutoResponseDto? ConsultarProdutoPorId(int id) {
 
-        var produto = _repository.ObterPorId(id);
+        var produto = _repository.ObterProdutoPorId(id);
 
         if (produto == null) return null;
 
@@ -32,25 +32,25 @@ public class ProdutoService : IProdutoService {
 
         var novoProduto = new Produto(0, dto.Nome, dto.Preco, dto.Estoque);
 
-        var produtoCriado = _repository.Adicionar(novoProduto);
+        var produtoCriado = _repository.AdicionarProduto(novoProduto);
 
         return MapearProduto(produtoCriado);
     }
 
     public bool AtualizarProduto(int id, AtualizarProdutoDto dto) {
 
-        var produtoExistente = _repository.ObterPorId(id);
+        var produtoExistente = _repository.ObterProdutoPorId(id);
 
         if (produtoExistente == null) return false;
 
         produtoExistente.AtualizarDados(dto.Nome, dto.Preco, dto.Estoque);
 
-        return _repository.Atualizar(produtoExistente);
+        return _repository.AtualizarProduto(produtoExistente);
     }
 
     public bool RemoverProduto(int id) {
 
-        return _repository.Remover(id);
+        return _repository.RemoverProduto(id);
     }
 
     private static ProdutoResponseDto MapearProduto(Produto produto) {

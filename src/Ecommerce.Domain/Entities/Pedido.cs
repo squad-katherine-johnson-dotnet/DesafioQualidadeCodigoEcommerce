@@ -44,10 +44,10 @@ public class Pedido {
         DataPedido = DateTime.UtcNow;
         Itens = listaDeItens;
 
-        CalcularValores();
+        CalcularValorTotal();
     }
 
-    private void CalcularValores() {
+    private void CalcularValorTotal() {
 
         ValorBruto = Itens.Sum(item => item.CalcularSubtotal());
 
