@@ -5,45 +5,42 @@ using Ecommerce.Domain.Interfaces;
 
 namespace Ecommerce.Application.Services;
 
-public class PedidoService : IPedidoService
-{
+public class PedidoService : IPedidoService {
     private readonly IPedidoRepository _pedidoRepository;
     private readonly IProdutoRepository _produtoRepository;
-    private readonly IEstoqueService _estoqueService;
+    private readonly IPedidoTransacaoRepository _pedidoTransacaoRepository;
 
     public PedidoService(
         IPedidoRepository pedidoRepository,
         IProdutoRepository produtoRepository,
-        IEstoqueService estoqueService)
-    {
+        IPedidoTransacaoRepository pedidoTransacaoRepository) {
+
         _pedidoRepository = pedidoRepository;
         _produtoRepository = produtoRepository;
-        _estoqueService = estoqueService;
+        _pedidoTransacaoRepository = pedidoTransacaoRepository;
     }
 
-    public IEnumerable<PedidoResponseDto> ObterTodos()
-    {
-        return _pedidoRepository.ObterTodos().Select(Mapear);
+    public IEnumerable<PedidoResponseDto> ListarPedidos() {
+
+        return _pedidoRepository.ListarPedidos().Select(Mapear);
     }
 
-    public PedidoResponseDto? ObterPorId(int id)
-    {
-        var pedido = _pedidoRepository.ObterPorId(id);
+    public PedidoResponseDto? ConsultarPedidoPorId(int id) {
+
+        var pedido = _pedidoRepository.ObterPedidoPorId(id);
 
         return pedido is null ? null : Mapear(pedido);
     }
 
-    public PedidoResponseDto Criar(CriarPedidoDto dto)
-    {
+    public PedidoResponseDto CriarPedido(CriarPedidoDto dto) {
+
         var itensPedido = new List<ItemPedido>();
 
-        foreach (var itemDto in dto.Itens)
-        {
-            var produto = _produtoRepository.ObterPorId(itemDto.ProdutoId);
+        foreach (var itemDto in dto.Itens) {
+            var produto = _produtoRepository.ObterProdutoPorId(itemDto.ProdutoId);
 
             if (produto is null)
-                throw new KeyNotFoundException(
-                    $"Produto com ID {itemDto.ProdutoId} não foi encontrado.");
+                throw new KeyNotFoundException($"Produto com ID {itemDto.ProdutoId} não foi encontrado.");
 
             itensPedido.Add(new ItemPedido(produto, itemDto.Quantidade));
         }
@@ -58,19 +55,17 @@ public class PedidoService : IPedidoService
             .Select(item => (item.ProdutoId, item.Quantidade))
             .ToList();
 
-        if (!_estoqueService.RegistrarSaidasEmLote(saidas))
-            throw new InvalidOperationException(
-                "Não foi possível realizar a baixa do estoque.");
+        var pedidoCriado = _pedidoTransacaoRepository
+            .AdicionarComBaixaDeEstoque(pedido, saidas);
 
-        var pedidoCriado = _pedidoRepository.Adicionar(pedido);
+        if (pedidoCriado is null) throw new InvalidOperationException(
+                "Não foi possível criar o pedido. Verifique se os produtos existem e possuem estoque suficiente.");
 
         return Mapear(pedidoCriado);
     }
 
-    private static PedidoResponseDto Mapear(Pedido pedido)
-    {
-        return new PedidoResponseDto
-        {
+    private static PedidoResponseDto Mapear(Pedido pedido) {
+        return new PedidoResponseDto {
             Id = pedido.Id,
             ClienteNome = pedido.ClienteNome,
             ClienteEmail = pedido.ClienteEmail,
@@ -79,8 +74,7 @@ public class PedidoService : IPedidoService
             ValorBruto = pedido.ValorBruto,
             ValorDesconto = pedido.ValorDesconto,
             ValorTotal = pedido.ValorTotal,
-            Itens = pedido.Itens.Select(item => new ItemPedidoResponseDto
-            {
+            Itens = pedido.Itens.Select(item => new ItemPedidoResponseDto {
                 ProdutoId = item.ProdutoId,
                 Quantidade = item.Quantidade,
                 PrecoUnitario = item.PrecoUnitario,

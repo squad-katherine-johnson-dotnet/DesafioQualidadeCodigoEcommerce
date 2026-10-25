@@ -1,9 +1,6 @@
-using System.Linq;
-
 namespace Ecommerce.Domain.Entities;
 
-public class Pedido
-{
+public class Pedido {
     private const decimal LimiteParaDesconto = 500m;
     private const decimal DescontoPorValor = 0.10m;
     private const decimal DescontoVip = 0.20m;
@@ -24,8 +21,7 @@ public class Pedido
         string clienteNome,
         string clienteEmail,
         string formaPagamento,
-        IEnumerable<ItemPedido> itens)
-    {
+        IEnumerable<ItemPedido> itens) {
         if (string.IsNullOrWhiteSpace(clienteNome))
             throw new ArgumentException("O nome do cliente é obrigatório.");
 
@@ -48,17 +44,21 @@ public class Pedido
         DataPedido = DateTime.UtcNow;
         Itens = listaDeItens;
 
-        CalcularValores();
+        CalcularValorTotal();
     }
 
-    private void CalcularValores()
-    {
+    private void CalcularValorTotal() {
+
         ValorBruto = Itens.Sum(item => item.CalcularSubtotal());
 
-        if (ValorBruto > LimiteParaDesconto)
-            ValorDesconto = ValorBruto * DescontoPorValor;
-        else if (ClienteEmail.Contains("vip"))
+        if (ClienteEmail.Contains("vip", StringComparison.OrdinalIgnoreCase)) {
+
             ValorDesconto = ValorBruto * DescontoVip;
+        }
+        else if (ValorBruto > LimiteParaDesconto) {
+
+            ValorDesconto = ValorBruto * DescontoPorValor;
+        }
 
         ValorTotal = ValorBruto - ValorDesconto;
     }

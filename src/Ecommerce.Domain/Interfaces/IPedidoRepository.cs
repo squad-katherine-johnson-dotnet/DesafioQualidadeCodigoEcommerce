@@ -4,7 +4,6 @@ namespace Ecommerce.Domain.Interfaces;
 
 public interface IPedidoRepository
 {
-    Pedido Adicionar(Pedido pedido);
-    Pedido? ObterPorId(int id);
-    IEnumerable<Pedido> ObterTodos();
+    Pedido? ObterPedidoPorId(int id);
+    IEnumerable<Pedido> ListarPedidos();
 }

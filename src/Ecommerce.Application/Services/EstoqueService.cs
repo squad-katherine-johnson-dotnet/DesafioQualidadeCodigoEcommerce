@@ -4,99 +4,97 @@ using Ecommerce.Domain.Interfaces;
 
 namespace Ecommerce.Application.Services;
 
-public class EstoqueService : IEstoqueService
-{
+public class EstoqueService : IEstoqueService {
     private readonly IProdutoRepository _repository;
 
-    public EstoqueService(IProdutoRepository repository)
-    {
+    public EstoqueService(IProdutoRepository repository) {
         _repository = repository;
     }
 
-    public IEnumerable<ProdutoResponseDto> ObterTodos()
-    {
-        return _repository.ObterTodos()
+    public IEnumerable<ProdutoResponseDto> ConsultarEstoque() {
+
+        return _repository.ListarProdutos()
             .Select(produto => MapearProduto(produto));
     }
 
-    public ProdutoResponseDto? ObterPorId(int produtoId)
-    {
-        var produto = _repository.ObterPorId(produtoId);
+    public ProdutoResponseDto? ConsultarEstoquePorProdutoId(int produtoId) {
 
-        if (produto == null)
-            return null;
+        var produto = _repository.ObterProdutoPorId(produtoId);
 
-        return MapearProduto(produto);
-    }
-
-    public ProdutoResponseDto? RegistrarEntrada(int produtoId, int quantidade)
-    {
-        if (quantidade <= 0)
-            throw new ArgumentOutOfRangeException(
-                nameof(quantidade), "A quantidade deve ser maior que zero.");
-
-        var produto = _repository.ObterPorId(produtoId);
-
-        if (produto == null)
-            return null;
-
-        produto.RegistrarEntradaEstoque(quantidade);
-
-        var atualizado = _repository.Atualizar(produto);
-
-        if (!atualizado)
-            return null;
+        if (produto == null) return null;
 
         return MapearProduto(produto);
     }
 
-    public ProdutoResponseDto? RegistrarSaida(int produtoId, int quantidade)
-    {
-        if (quantidade <= 0)
-            throw new ArgumentOutOfRangeException(
-                nameof(quantidade), "A quantidade deve ser maior que zero.");
 
-        var produto = _repository.ObterPorId(produtoId);
+    public ProdutoResponseDto? RegistrarEntradaDeEstoque(int produtoId, int quantidade) {
 
-        if (produto == null)
-            return null;
+        if (quantidade <= 0) throw new ArgumentOutOfRangeException(
+                nameof(quantidade), "A quantidade de entrada deve ser maior que zero.");
 
-        var linhasAlteradas = _repository.BaixarEstoqueSeDisponivel(produtoId, quantidade);
+        var produto = _repository.ObterProdutoPorId(produtoId);
 
-        if (linhasAlteradas == 0)
-            throw new InvalidOperationException("Estoque insuficiente para realizar a saída.");
+        if (produto == null) return null;
 
-        var atualizado = _repository.ObterPorId(produtoId);
+        var linhasAlteradas = _repository.RegistrarEntradaEstoque(produtoId, quantidade);
 
-        if (atualizado == null)
-            return null;
+        if (linhasAlteradas == 0) throw new InvalidOperationException(
+                "Não foi possível registrar a entrada. Verifique se o estoque atingiu o limite permitido.");
+
+        var atualizado = _repository.ObterProdutoPorId(produtoId);
+
+        if (atualizado == null) throw new InvalidOperationException(
+                "O estoque foi atualizado, mas não foi possível recuperar o produto.");
 
         return MapearProduto(atualizado);
     }
 
-    public IEnumerable<ProdutoResponseDto> ObterAbaixoDoMinimo(int quantidadeMinima)
-    {
-        if (quantidadeMinima < 0)
-            throw new ArgumentOutOfRangeException(nameof(quantidadeMinima), "O estoque mínimo não pode ser negativo.");
 
-        return _repository.ObterTodos()
+    public ProdutoResponseDto? RegistrarSaidaDeEstoque(int produtoId, int quantidade) {
+
+        if (quantidade <= 0) throw new ArgumentOutOfRangeException(
+                nameof(quantidade), "A quantidade deve ser maior que zero.");
+
+        var produto = _repository.ObterProdutoPorId(produtoId);
+
+        if (produto == null) return null;
+
+        var linhasAlteradas = _repository.BaixarEstoqueSeDisponivel(produtoId, quantidade);
+
+        if (linhasAlteradas == 0)
+            throw new InvalidOperationException("Não foi possível realizar a saída. Verifique se o estoque é suficiente.");
+
+        var atualizado = _repository.ObterProdutoPorId(produtoId);
+
+        if (atualizado == null)
+            throw new InvalidOperationException("O estoque foi atualizado, mas não foi possível recuperar o produto.");
+
+        return MapearProduto(atualizado);
+    }
+
+    public IEnumerable<ProdutoResponseDto> ListarProdutosAbaixoDoEstoqueMinimo(int quantidadeMinima) {
+
+        if (quantidadeMinima < 0)
+            throw new ArgumentOutOfRangeException(
+                nameof(quantidadeMinima), "O estoque mínimo não pode ser negativo.");
+
+        return _repository.ListarProdutos()
             .Where(produto => produto.Estoque < quantidadeMinima)
             .Select(produto => MapearProduto(produto));
     }
-    private static ProdutoResponseDto MapearProduto(Ecommerce.Domain.Entities.Produto produto)
-    {
-        return new ProdutoResponseDto
-        {
+
+    public bool RegistrarSaidasDeEstoqueEmLote(IEnumerable<(int ProdutoId, int Quantidade)> itens) {
+
+        return _repository.BaixarEstoqueEmLote(itens);
+    }
+
+    private static ProdutoResponseDto MapearProduto(Ecommerce.Domain.Entities.Produto produto) {
+
+        return new ProdutoResponseDto {
             Id = produto.Id,
             Nome = produto.Nome,
             Preco = produto.Preco,
             Estoque = produto.Estoque
         };
-    }
-
-    public bool RegistrarSaidasEmLote(
-        IEnumerable<(int ProdutoId, int Quantidade)> itens)
-    {
-        return _repository.BaixarEstoqueEmLote(itens);
     }
 }
