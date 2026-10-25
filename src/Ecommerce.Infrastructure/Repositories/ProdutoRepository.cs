@@ -31,14 +31,25 @@ public class ProdutoRepository : IProdutoRepository
         return produto;
     }
 
-    public bool Atualizar(Produto produto)
-    {
+    public bool Atualizar(Produto produto) {
         var existente = _context.Produtos.Find(produto.Id);
-        if (existente == null) return false;
 
-        _context.Entry(existente).CurrentValues.SetValues(produto);
-        _context.SaveChanges();
-        return true;
+        if (existente == null)
+            return false;
+
+        var valoresOriginais = _context.Entry(existente)
+            .CurrentValues.Clone();
+
+        try {
+            _context.Entry(existente).CurrentValues.SetValues(produto);
+            _context.SaveChanges();
+
+            return true;
+        }
+        catch {
+            _context.Entry(existente).CurrentValues.SetValues(valoresOriginais);
+            throw;
+        }
     }
 
     public bool Remover(int id)
@@ -72,22 +83,17 @@ public class ProdutoRepository : IProdutoRepository
         return linhasAlteradas;
     }
 
-    public bool BaixarEstoqueEmLote(IEnumerable<(int ProdutoId, int Quantidade)> itens)
-    {
+    public bool BaixarEstoqueEmLote(
+        IEnumerable<(int ProdutoId, int Quantidade)> itens) {
         var lista = itens.ToList();
 
         if (lista.Count == 0)
             return true;
 
         if (lista.Any(item => item.ProdutoId <= 0 || item.Quantidade <= 0))
-        {
             return false;
-        }
 
-        using var transacao = _context.Database.BeginTransaction();
-
-        foreach (var item in lista)
-        {
+        foreach (var item in lista) {
             var linhasAlteradas = _context.Produtos
                 .Where(p =>
                     p.Id == item.ProdutoId &&
@@ -96,22 +102,17 @@ public class ProdutoRepository : IProdutoRepository
                     .SetProperty(p => p.Estoque, p => p.Estoque - item.Quantidade));
 
             if (linhasAlteradas == 0)
-            {
-                transacao.Rollback();
                 return false;
-            }
         }
 
-        transacao.Commit();
-
-        foreach (var item in lista)
-        {
+        foreach (var item in lista) {
             var produtoRastreado = _context.ChangeTracker
                 .Entries<Produto>()
                 .FirstOrDefault(e => e.Entity.Id == item.ProdutoId);
 
             produtoRastreado?.Reload();
         }
+
         return true;
     }
 }
