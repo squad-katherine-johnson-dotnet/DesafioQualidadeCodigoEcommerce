@@ -74,6 +74,9 @@ public class PedidoService : IPedidoService {
             ValorBruto = pedido.ValorBruto,
             ValorDesconto = pedido.ValorDesconto,
             ValorTotal = pedido.ValorTotal,
+            StatusPagamento = pedido.StatusPagamento,
+            StatusLogistica = pedido.StatusLogistica,
+            CodigoRastreio = pedido.CodigoRastreio,
             Itens = pedido.Itens.Select(item => new ItemPedidoResponseDto {
                 ProdutoId = item.ProdutoId,
                 Quantidade = item.Quantidade,

@@ -1,3 +1,5 @@
+using Ecommerce.Domain.Enums;
+
 namespace Ecommerce.Domain.Entities;
 
 public class Pedido {
@@ -14,6 +16,9 @@ public class Pedido {
     public decimal ValorDesconto { get; private set; }
     public decimal ValorTotal { get; private set; }
     public ICollection<ItemPedido> Itens { get; private set; } = new List<ItemPedido>();
+    public StatusPagamento StatusPagamento { get; private set; } = StatusPagamento.Pendente;
+    public StatusLogistica StatusLogistica { get; private set; } = StatusLogistica.Pendente;
+    public string? CodigoRastreio { get; private set; }
 
     private Pedido() { }
 
