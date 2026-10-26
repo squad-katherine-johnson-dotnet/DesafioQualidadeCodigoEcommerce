@@ -9,10 +9,16 @@ public class PagamentoService : IPagamentoService {
 
     private readonly IPedidoRepository _pedidoRepository;
     private readonly PagamentoMock _pagamentoMock;
+    private readonly IFilaLogistica _filaLogistica;
 
-    public PagamentoService(IPedidoRepository pedidoRepository, PagamentoMock pagamentoMock) {
+    public PagamentoService(
+        IPedidoRepository pedidoRepository,
+        PagamentoMock pagamentoMock,
+        IFilaLogistica filaLogistica) {
+
         _pedidoRepository = pedidoRepository;
         _pagamentoMock = pagamentoMock;
+        _filaLogistica = filaLogistica;
     }
 
     public async Task ProcessarPagamentoAsync(int pedidoId, CancellationToken cancellationToken = default) {
@@ -32,6 +38,11 @@ public class PagamentoService : IPagamentoService {
         pedido.AtualizarStatusPagamento(aprovado ? StatusPagamento.Aprovado : StatusPagamento.Recusado);
 
         _pedidoRepository.AtualizarPedido(pedido);
+
+        if (aprovado) {
+
+            await _filaLogistica.EnfileirarAsync(pedido.Id, cancellationToken);
+        }
     }
 }
 
