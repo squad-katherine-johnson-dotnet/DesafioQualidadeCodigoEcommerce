@@ -17,3 +17,5 @@ obj/
 *.db
 *.db-shm
 *.db-wal
+# Resultados dos testes e cobertura
+**/TestResults/
