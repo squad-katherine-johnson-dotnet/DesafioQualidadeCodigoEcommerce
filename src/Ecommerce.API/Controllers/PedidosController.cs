@@ -48,11 +48,11 @@ public class PedidosController : ControllerBase {
     }
 
     [HttpPost]
-    public ActionResult<RespostaPadraoDto<PedidoResponseDto>> CriarPedido(CriarPedidoDto dto) {
+    public async Task<ActionResult<RespostaPadraoDto<PedidoResponseDto>>> CriarPedido(CriarPedidoDto dto) {
 
         try {
 
-            var pedido = _pedidoService.CriarPedido(dto);
+            var pedido = await _pedidoService.CriarPedidoAsync(dto);
 
             var resposta = new RespostaPadraoDto<PedidoResponseDto> {
                 Sucesso = true,
@@ -73,6 +73,80 @@ public class PedidosController : ControllerBase {
         catch (InvalidOperationException ex) {
 
             return Conflict(new RespostaPadraoDto<PedidoResponseDto> {
+                Sucesso = false,
+                Mensagem = ex.Message,
+                Dados = null
+            });
+        }
+        catch (ArgumentException ex) {
+
+            return BadRequest(new RespostaPadraoDto<PedidoResponseDto> {
+                Sucesso = false,
+                Mensagem = ex.Message,
+                Dados = null
+            });
+        }
+    }
+
+    [HttpPatch("{id:int}/pagamento")]
+    public ActionResult<RespostaPadraoDto<PedidoResponseDto>> AtualizarStatusPagamento(
+        int id, [FromBody] AtualizarStatusPagamentoDto dto) {
+
+        try {
+
+            var pedido = _pedidoService.AtualizarStatusPagamento(id, dto.Status);
+
+            if (pedido != null) {
+
+                return NotFound(new RespostaPadraoDto<PedidoResponseDto> {
+                    Sucesso = false,
+                    Mensagem = $"Pedido com ID {id} não foi encontrado.",
+                    Dados = null
+                });
+            }
+
+            return Ok(new RespostaPadraoDto<PedidoResponseDto> {
+                Sucesso = true,
+                Mensagem = "Status do pagamento atualizado com sucesso!",
+                Dados = pedido
+            });
+        }
+        catch (InvalidOperationException ex) {
+
+            return BadRequest(new RespostaPadraoDto<PedidoResponseDto> {
+                Sucesso = false,
+                Mensagem = ex.Message,
+                Dados = null
+            });
+        }
+    }
+
+    [HttpPatch("{id:int}/logistica")]
+    public ActionResult<RespostaPadraoDto<PedidoResponseDto>> AtualizarStatusLogistica(
+        int id, [FromBody] AtualizarStatusLogisticaDto dto) {
+
+        try {
+
+            var pedido = _pedidoService.AtualizarStatusLogistica(id, dto.Status, dto.CodigoRastreio);
+
+            if (pedido is null) {
+
+                return NotFound(new RespostaPadraoDto<PedidoResponseDto> {
+                    Sucesso = false,
+                    Mensagem = $"Pedido com ID {id} não foi encontrado.",
+                    Dados = null
+                });
+            }
+
+            return Ok(new RespostaPadraoDto<PedidoResponseDto> {
+                Sucesso = true,
+                Mensagem = "Status da logística atualizado com sucesso!",
+                Dados = pedido
+            });
+        }
+        catch (InvalidOperationException ex) {
+
+            return BadRequest(new RespostaPadraoDto<PedidoResponseDto> {
                 Sucesso = false,
                 Mensagem = ex.Message,
                 Dados = null

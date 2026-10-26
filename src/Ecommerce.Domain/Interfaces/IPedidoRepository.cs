@@ -6,4 +6,5 @@ public interface IPedidoRepository
 {
     Pedido? ObterPedidoPorId(int id);
     IEnumerable<Pedido> ListarPedidos();
+    void AtualizarPedido(Pedido pedido);
 }

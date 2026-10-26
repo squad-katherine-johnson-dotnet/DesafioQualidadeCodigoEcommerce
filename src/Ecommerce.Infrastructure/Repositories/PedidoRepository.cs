@@ -26,4 +26,12 @@ public class PedidoRepository : IPedidoRepository {
             .AsNoTracking()
             .ToList();
     }
+
+    public void AtualizarPedido(Pedido pedido) {
+
+        ArgumentNullException.ThrowIfNull(pedido);
+
+        _context.Entry(pedido).State = EntityState.Modified;
+        _context.SaveChanges();
+    }
 }

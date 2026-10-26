@@ -52,6 +52,47 @@ public class Pedido {
         CalcularValorTotal();
     }
 
+    public void AtualizarStatusPagamento(StatusPagamento status) {
+
+        if (StatusPagamento == StatusPagamento.Aprovado) throw new InvalidOperationException(
+            "Um pagamento aprovado não pode ser reprocessado.");
+
+        if (status == StatusPagamento.Pendente && StatusPagamento != StatusPagamento.Recusado)
+            throw new InvalidOperationException("Somente um pagament recusado pode voltar para pendente.");
+
+        if (status == StatusPagamento.Recusado && StatusPagamento != StatusPagamento.Pendente)
+            throw new InvalidOperationException("Somente um pagamento pendente pode ser recusado.");
+
+        StatusPagamento = status;
+    }
+
+    public void AtualizarStatusLogistica(StatusLogistica status, string? codigoRastreio = null) {
+
+        if (StatusLogistica == StatusLogistica.Enviado) throw new InvalidOperationException(
+            "Uma logística já enviada não pode ser alterada.");
+
+        if (status == StatusLogistica.Enviado) {
+
+            if (StatusPagamento != StatusPagamento.Aprovado) throw new InvalidOperationException(
+                "A logística só pode ser enviada após a aprovação do pagamento.");
+
+            if (string.IsNullOrWhiteSpace(codigoRastreio)) throw new ArgumentException(
+                "O código de rastreio é obrigatório para o envio.");
+        }
+
+        if (status == StatusLogistica.Pendente && StatusLogistica != StatusLogistica.Falhou)
+            throw new InvalidOperationException("Somente uma logística que falhou pode voltar para pendente.");
+
+        StatusLogistica = status;
+
+        if (status == StatusLogistica.Enviado) {
+            CodigoRastreio = codigoRastreio;
+        }
+        else {
+            CodigoRastreio = null;
+        }
+    }
+
     private void CalcularValorTotal() {
 
         ValorBruto = Itens.Sum(item => item.CalcularSubtotal());
@@ -67,4 +108,6 @@ public class Pedido {
 
         ValorTotal = ValorBruto - ValorDesconto;
     }
+
+
 }
