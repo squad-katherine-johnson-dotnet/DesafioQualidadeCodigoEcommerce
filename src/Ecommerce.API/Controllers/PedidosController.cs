@@ -9,9 +9,12 @@ namespace Ecommerce.API.Controllers;
 [Route("api/[controller]")]
 public class PedidosController : ControllerBase {
     private readonly IPedidoService _pedidoService;
+    private readonly ILogisticaService _logisticaService;
 
-    public PedidosController(IPedidoService pedidoService) {
+    public PedidosController(IPedidoService pedidoService, ILogisticaService logisticaService) {
+
         _pedidoService = pedidoService;
+        _logisticaService = logisticaService;
     }
 
     [HttpGet]
@@ -88,46 +91,12 @@ public class PedidosController : ControllerBase {
         }
     }
 
-    [HttpPatch("{id:int}/pagamento")]
-    public ActionResult<RespostaPadraoDto<PedidoResponseDto>> AtualizarStatusPagamento(
-        int id, [FromBody] AtualizarStatusPagamentoDto dto) {
+    [HttpPost("{id:int}/pagamento/reprocessar")]
+    public async Task<ActionResult<RespostaPadraoDto<PedidoResponseDto>>> ReprocessarPedido(int id) {
 
         try {
 
-            var pedido = _pedidoService.AtualizarStatusPagamento(id, dto.Status);
-
-            if (pedido != null) {
-
-                return NotFound(new RespostaPadraoDto<PedidoResponseDto> {
-                    Sucesso = false,
-                    Mensagem = $"Pedido com ID {id} não foi encontrado.",
-                    Dados = null
-                });
-            }
-
-            return Ok(new RespostaPadraoDto<PedidoResponseDto> {
-                Sucesso = true,
-                Mensagem = "Status do pagamento atualizado com sucesso!",
-                Dados = pedido
-            });
-        }
-        catch (InvalidOperationException ex) {
-
-            return BadRequest(new RespostaPadraoDto<PedidoResponseDto> {
-                Sucesso = false,
-                Mensagem = ex.Message,
-                Dados = null
-            });
-        }
-    }
-
-    [HttpPatch("{id:int}/logistica")]
-    public ActionResult<RespostaPadraoDto<PedidoResponseDto>> AtualizarStatusLogistica(
-        int id, [FromBody] AtualizarStatusLogisticaDto dto) {
-
-        try {
-
-            var pedido = _pedidoService.AtualizarStatusLogistica(id, dto.Status, dto.CodigoRastreio);
+            var pedido = await _pedidoService.ReprocessarPagamentoAsync(id);
 
             if (pedido is null) {
 
@@ -138,27 +107,51 @@ public class PedidosController : ControllerBase {
                 });
             }
 
-            return Ok(new RespostaPadraoDto<PedidoResponseDto> {
+            return Accepted(new RespostaPadraoDto<PedidoResponseDto> {
                 Sucesso = true,
-                Mensagem = "Status da logística atualizado com sucesso!",
+                Mensagem = "Pagamento aceito para reprocessamento.",
                 Dados = pedido
             });
         }
         catch (InvalidOperationException ex) {
 
-            return BadRequest(new RespostaPadraoDto<PedidoResponseDto> {
-                Sucesso = false,
-                Mensagem = ex.Message,
-                Dados = null
-            });
-        }
-        catch (ArgumentException ex) {
-
-            return BadRequest(new RespostaPadraoDto<PedidoResponseDto> {
+            return Conflict(new RespostaPadraoDto<PedidoResponseDto> {
                 Sucesso = false,
                 Mensagem = ex.Message,
                 Dados = null
             });
         }
     }
+
+    [HttpPost("{id:int}/logistica/reenviar")]
+    public async Task<ActionResult<RespostaPadraoDto<PedidoResponseDto>>> ReenviarLogistica(int id) {
+
+        try {
+
+            await _logisticaService.ReenviarLogisticaAsync(id);
+
+            return Accepted(new RespostaPadraoDto<PedidoResponseDto> {
+                Sucesso = true,
+                Mensagem = "Logística aceita para reenvio.",
+                Dados = _pedidoService.ConsultarPedidoPorId(id)
+            });
+        }
+        catch (KeyNotFoundException ex) {
+
+            return NotFound(new RespostaPadraoDto<PedidoResponseDto> {
+                Sucesso = false,
+                Mensagem = ex.Message,
+                Dados = null
+            });
+        }
+        catch (InvalidOperationException ex) {
+
+            return Conflict(new RespostaPadraoDto<PedidoResponseDto> {
+                Sucesso = false,
+                Mensagem = ex.Message,
+                Dados = null
+            });
+        }
+    }
+
 }

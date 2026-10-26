@@ -1,11 +1,21 @@
-﻿namespace Ecommerce.Application.Payments;
+﻿using Microsoft.Extensions.Configuration;
+
+namespace Ecommerce.Application.Payments;
 
 public class PagamentoMock {
+    private readonly bool _aprovarPagamento;
 
-    public Task<bool> ProcessarAsync(int pedidoId, CancellationToken cancellationToken = default) {
+    public PagamentoMock(IConfiguration configuration) {
+
+        _aprovarPagamento = bool.Parse(configuration["PagamentoMock:AprovarPagamento"] ?? "true");
+    }
+
+    public Task<bool> ProcessarAsync(
+        int pedidoId,
+        CancellationToken cancellationToken = default) {
 
         cancellationToken.ThrowIfCancellationRequested();
 
-        return Task.FromResult(true);
+        return Task.FromResult(_aprovarPagamento);
     }
 }

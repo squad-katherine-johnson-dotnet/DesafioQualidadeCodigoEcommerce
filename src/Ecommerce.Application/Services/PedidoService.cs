@@ -70,31 +70,20 @@ public class PedidoService : IPedidoService {
         return Mapear(pedidoCriado);
     }
 
-    public PedidoResponseDto? AtualizarStatusPagamento(int pedidoId, StatusPagamento status) {
+    public async Task<PedidoResponseDto?> ReprocessarPagamentoAsync(int pedidoId) {
 
         var pedido = _pedidoRepository.ObterPedidoPorId(pedidoId);
 
         if (pedido is null) return null;
 
-        pedido.AtualizarStatusPagamento(status);
+        if (pedido.StatusPagamento != StatusPagamento.Recusado) throw new InvalidOperationException(
+            "Somente pedidos com pagamento recusado podem ser reprocessados.");
+
+        pedido.AtualizarStatusPagamento(StatusPagamento.Pendente);
 
         _pedidoRepository.AtualizarPedido(pedido);
 
-        return Mapear(pedido);
-    }
-
-    public PedidoResponseDto? AtualizarStatusLogistica(int pedidoId, StatusLogistica status, string? codigoRastreio = null) {
-
-        var pedido = _pedidoRepository.ObterPedidoPorId(pedidoId);
-
-        if (pedido is null) return null;
-
-        if (pedido.StatusPagamento != StatusPagamento.Aprovado) throw new InvalidOperationException(
-            "A logística só pode ser atualizada após a aprovação do pagamento.");
-
-        pedido.AtualizarStatusLogistica(status, codigoRastreio);
-
-        _pedidoRepository.AtualizarPedido(pedido);
+        await _filaPagamento.EnfileirarAsync(pedidoId);
 
         return Mapear(pedido);
     }
