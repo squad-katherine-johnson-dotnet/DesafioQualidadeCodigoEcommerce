@@ -5,4 +5,5 @@
     <Project Path="src/Ecommerce.Domain/Ecommerce.Domain.csproj" />
     <Project Path="src/Ecommerce.Infrastructure/Ecommerce.Infrastructure.csproj" />
   </Folder>
+  <Project Path="Ecommerce.Tests/Ecommerce.Tests.csproj" Id="1b31969c-0074-4a65-8c7d-ccd5cb51bb7a" />
 </Solution>
