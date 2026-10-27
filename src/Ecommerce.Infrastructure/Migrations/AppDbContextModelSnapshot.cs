@@ -56,12 +56,22 @@ namespace Ecommerce.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("CodigoRastreio")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("DataPedido")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FormaPagamento")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("StatusLogistica")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("StatusPagamento")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("ValorBruto")
                         .HasColumnType("TEXT");

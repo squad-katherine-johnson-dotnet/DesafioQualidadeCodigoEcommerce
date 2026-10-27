@@ -1,3 +1,5 @@
+using Ecommerce.Domain.Enums;
+
 namespace Ecommerce.Application.DTOs;
 
 public class PedidoResponseDto {
@@ -10,4 +12,7 @@ public class PedidoResponseDto {
     public decimal ValorDesconto { get; set; }
     public decimal ValorTotal { get; set; }
     public List<ItemPedidoResponseDto> Itens { get; set; } = [];
+    public StatusPagamento StatusPagamento { get; set; }
+    public StatusLogistica StatusLogistica { get; set; }
+    public string? CodigoRastreio { get; set; }
 }

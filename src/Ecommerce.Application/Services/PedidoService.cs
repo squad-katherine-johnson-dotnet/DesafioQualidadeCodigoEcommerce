@@ -1,6 +1,7 @@
 using Ecommerce.Application.DTOs;
 using Ecommerce.Application.Interfaces;
 using Ecommerce.Domain.Entities;
+using Ecommerce.Domain.Enums;
 using Ecommerce.Domain.Interfaces;
 
 namespace Ecommerce.Application.Services;
@@ -9,15 +10,18 @@ public class PedidoService : IPedidoService {
     private readonly IPedidoRepository _pedidoRepository;
     private readonly IProdutoRepository _produtoRepository;
     private readonly IPedidoTransacaoRepository _pedidoTransacaoRepository;
+    private readonly IFilaPagamento _filaPagamento;
 
     public PedidoService(
         IPedidoRepository pedidoRepository,
         IProdutoRepository produtoRepository,
-        IPedidoTransacaoRepository pedidoTransacaoRepository) {
+        IPedidoTransacaoRepository pedidoTransacaoRepository,
+        IFilaPagamento filaPagamento) {
 
         _pedidoRepository = pedidoRepository;
         _produtoRepository = produtoRepository;
         _pedidoTransacaoRepository = pedidoTransacaoRepository;
+        _filaPagamento = filaPagamento;
     }
 
     public IEnumerable<PedidoResponseDto> ListarPedidos() {
@@ -32,7 +36,7 @@ public class PedidoService : IPedidoService {
         return pedido is null ? null : Mapear(pedido);
     }
 
-    public PedidoResponseDto CriarPedido(CriarPedidoDto dto) {
+    public async Task<PedidoResponseDto> CriarPedidoAsync(CriarPedidoDto dto) { 
 
         var itensPedido = new List<ItemPedido>();
 
@@ -61,7 +65,27 @@ public class PedidoService : IPedidoService {
         if (pedidoCriado is null) throw new InvalidOperationException(
                 "Não foi possível criar o pedido. Verifique se os produtos existem e possuem estoque suficiente.");
 
+        await _filaPagamento.EnfileirarAsync(pedidoCriado.Id);
+
         return Mapear(pedidoCriado);
+    }
+
+    public async Task<PedidoResponseDto?> ReprocessarPagamentoAsync(int pedidoId) {
+
+        var pedido = _pedidoRepository.ObterPedidoPorId(pedidoId);
+
+        if (pedido is null) return null;
+
+        if (pedido.StatusPagamento != StatusPagamento.Recusado) throw new InvalidOperationException(
+            "Somente pedidos com pagamento recusado podem ser reprocessados.");
+
+        pedido.AtualizarStatusPagamento(StatusPagamento.Pendente);
+
+        _pedidoRepository.AtualizarPedido(pedido);
+
+        await _filaPagamento.EnfileirarAsync(pedidoId);
+
+        return Mapear(pedido);
     }
 
     private static PedidoResponseDto Mapear(Pedido pedido) {
@@ -74,6 +98,9 @@ public class PedidoService : IPedidoService {
             ValorBruto = pedido.ValorBruto,
             ValorDesconto = pedido.ValorDesconto,
             ValorTotal = pedido.ValorTotal,
+            StatusPagamento = pedido.StatusPagamento,
+            StatusLogistica = pedido.StatusLogistica,
+            CodigoRastreio = pedido.CodigoRastreio,
             Itens = pedido.Itens.Select(item => new ItemPedidoResponseDto {
                 ProdutoId = item.ProdutoId,
                 Quantidade = item.Quantidade,
